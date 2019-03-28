@@ -29,7 +29,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        circle = new Circle(15, Color.BLUE);
+        circle = new Circle(15, Color.RED);
         circle.relocate(200, 200);
 
         canvas.getChildren().addAll(circle);
@@ -40,28 +40,29 @@ public class Main extends Application {
 
 
         KeyFrame kf = new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
+            final double eps = 1e-5;
+            final double g = 9.8;
             double startTime = System.currentTimeMillis();
-            double speed = 0;
-            double y0 = circle.getLayoutY() / 100;
-            double eps = 1e-5;
+            double startSpeed = 0;
+            Bounds bounds = canvas.getBoundsInLocal();
+            double height = (bounds.getMaxY() - circle.getRadius()) / 100;
+            double y0 = getY();
+
+            private double getY() {
+                return circle.getLayoutY() / 100;
+            }
 
             @Override
             public void handle(ActionEvent event) {
                 double currentTime = (System.currentTimeMillis() - startTime) / 1000;
-                Bounds bounds = canvas.getBoundsInLocal();
 
-                System.out.println(currentTime);
+                circle.setLayoutY((y0 + startSpeed * currentTime + g / 2 * Math.pow(currentTime, 2)) * 100);
 
-
-                circle.setLayoutY((y0 + speed * currentTime + 4.6 * currentTime * currentTime) * 100);
-
-                if (circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius())) {
-                    y0 = (bounds.getMaxY() - circle.getRadius() - eps) / 100;
-                    speed = -6 / currentTime;
+                if (getY() >= height) {
+                    y0 = height - eps;
+                    startSpeed = -(startSpeed + g * currentTime);
                     startTime = System.currentTimeMillis();
                 }
-
-                
             }
         });
 
