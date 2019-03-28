@@ -41,26 +41,27 @@ public class Main extends Application {
 
         KeyFrame kf = new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
             double startTime = System.currentTimeMillis();
-            boolean isMovedToBottom = true;
             double speed = 0;
+            double y0 = circle.getLayoutY() / 100;
+            double eps = 1e-5;
 
             @Override
             public void handle(ActionEvent event) {
                 double currentTime = (System.currentTimeMillis() - startTime) / 1000;
                 Bounds bounds = canvas.getBoundsInLocal();
 
-                if (isMovedToBottom) {
-                    circle.setLayoutY((2 + 4.6 * currentTime * currentTime) * 100);
-                } else {
-                    circle.setLayoutY((bounds.getMaxY() / 100 + speed * currentTime - 4.6 * currentTime * currentTime)
-                        * 100);
+                System.out.println(currentTime);
+
+
+                circle.setLayoutY((y0 + speed * currentTime + 4.6 * currentTime * currentTime) * 100);
+
+                if (circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius())) {
+                    y0 = (bounds.getMaxY() - circle.getRadius() - eps) / 100;
+                    speed = -6 / currentTime;
+                    startTime = System.currentTimeMillis();
                 }
 
-                if (circle.getLayoutY() >= bounds.getMaxY() - circle.getRadius()) {
-                    speed = 8 / currentTime;
-                    startTime = System.currentTimeMillis();
-                    isMovedToBottom = false;
-                }
+                
             }
         });
 
