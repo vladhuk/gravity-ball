@@ -38,13 +38,29 @@ public class Main extends Application {
         timeline.setAutoReverse(true);
         timeline.setCycleCount(Timeline.INDEFINITE);
 
-        double startTime = System.currentTimeMillis();
+
         KeyFrame kf = new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
+            double startTime = System.currentTimeMillis();
+            boolean isMovedToBottom = true;
+            double speed = 0;
+
             @Override
             public void handle(ActionEvent event) {
                 double currentTime = (System.currentTimeMillis() - startTime) / 1000;
-                System.out.println(currentTime);
-                circle.setLayoutY(circle.getLayoutY() + 4.6 * currentTime * currentTime);
+                Bounds bounds = canvas.getBoundsInLocal();
+
+                if (isMovedToBottom) {
+                    circle.setLayoutY((2 + 4.6 * currentTime * currentTime) * 100);
+                } else {
+                    circle.setLayoutY((bounds.getMaxY() / 100 + speed * currentTime - 4.6 * currentTime * currentTime)
+                        * 100);
+                }
+
+                if (circle.getLayoutY() >= bounds.getMaxY() - circle.getRadius()) {
+                    speed = 8 / currentTime;
+                    startTime = System.currentTimeMillis();
+                    isMovedToBottom = false;
+                }
             }
         });
 
