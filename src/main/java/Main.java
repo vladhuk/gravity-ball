@@ -39,35 +39,9 @@ public class Main extends Application {
         timeline.setCycleCount(Timeline.INDEFINITE);
 
 
-        KeyFrame kf = new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
-            final double eps = 1e-5;
-            final double g = 9.8;
-            double startTime = System.currentTimeMillis();
-            double startSpeed = 0;
-            Bounds bounds = canvas.getBoundsInLocal();
-            double height = (bounds.getMaxY() - circle.getRadius()) / 100;
-            double y0 = getY();
-
-            private double getY() {
-                return circle.getLayoutY() / 100;
-            }
-
-            @Override
-            public void handle(ActionEvent event) {
-                double currentTime = (System.currentTimeMillis() - startTime) / 1000;
-
-                circle.setLayoutY((y0 + startSpeed * currentTime + g / 2 * Math.pow(currentTime, 2)) * 100);
-
-                if (getY() >= height) {
-                    y0 = height - eps;
-                    startSpeed = -(startSpeed + g * currentTime);
-                    startTime = System.currentTimeMillis();
-                }
-            }
-        });
+        KeyFrame kf = new KeyFrame(Duration.millis(1), new CanvasHandler(canvas, circle));
 
         timeline.getKeyFrames().add(kf);
         timeline.play();
-
     }
 }
