@@ -1,21 +1,21 @@
 public class Stopwatch {
 
     private double startTime;
-    private boolean turn = true;
+    private boolean isStopped = false;
 
     public void start() {
         startTime = System.currentTimeMillis();
     }
 
     public double getCurrentTimeSeconds() {
-        if (!turn) {
+        if (isStopped) {
             return 0;
         }
 
         return (System.currentTimeMillis() - startTime) / 1000;
     }
 
-    public void turn(boolean flag) {
-        this.turn = flag;
+    public void stop() {
+        this.isStopped = true;
     }
 }

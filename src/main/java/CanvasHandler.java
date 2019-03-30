@@ -1,141 +1,102 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 public class CanvasHandler implements EventHandler<ActionEvent> {
 
     public static final double EPS = 1e-5;
     public static final double G = 9.8;
 
-    private final double top;
-    private final double bottom;
-    private final double right;
-    private final double left;
+    private double top;
+    private double bottom;
+    private double right;
+    private double left;
 
-    private Circle circle;
+    private Shape shape;
 
-    private Stopwatch yTime = new Stopwatch();
-    private double currentYTime;
-    private double y0;
-    private double Vy0;
+    private Coordinate x;
+    private Coordinate y;
 
-    private Stopwatch xTime = new Stopwatch();
-    private double currentXTime;
-    private double x0;
-    private double Vx0;
-    private double a;
+    public CanvasHandler(Shape shape) {
+        this.shape = shape;
 
-    public CanvasHandler(Pane canvas, Circle circle) {
-        this.circle = circle;
+        initCoordinates();
+        initBorders();
+    }
 
-        xTime.start();
-        yTime.start();
+    private void initCoordinates() {
+        x = new Coordinate(shape.getLayoutX() / 100, 4, 0);
+        x.updateStopwatch();
 
-        x0 = getX();
-        Vx0 = 15;
-        a = 0;
+        y = new Coordinate(shape.getLayoutY() / 100, -5, G);
+        y.updateStopwatch();
+    }
 
-        y0 = getY();
-        Vy0 = 15;
+    private void initBorders() {
+        Bounds paneBounds = shape.getParent().getBoundsInLocal();
+        Bounds shapeBounds = shape.getBoundsInLocal();
 
-        Bounds bounds = canvas.getBoundsInLocal();
-        top = circle.getRadius() / 100;
-        bottom = (bounds.getMaxY() - circle.getRadius()) / 100;
-        right = (bounds.getMaxX() - circle.getRadius()) / 100;
-        left = top;
+        top = shapeBounds.getMaxY() / 100;
+        bottom = (paneBounds.getMaxY() - shapeBounds.getMaxY()) / 100;
+        right = (paneBounds.getMaxX() - shapeBounds.getMaxX()) / 100;
+        left = shapeBounds.getMaxX() / 100;
     }
 
     @Override
     public void handle(ActionEvent event) {
-        currentYTime = yTime.getCurrentTimeSeconds();
-        currentXTime = xTime.getCurrentTimeSeconds();
+        x.checkStopwatch();
+        y.checkStopwatch();
 
-        circle.setLayoutY(countCoordinate(y0, Vy0, G, currentYTime));
-        circle.setLayoutX(countCoordinate(x0, Vx0, a, currentXTime));
+        double xPosition = x.getCoordinate() * 100;
+        double yPosition = y.getCoordinate() * 100;
 
-        if (isOnBottom()) {
-            if (isSpeedLow(getVy())) {
-                yTime.turn(false);
+        shape.setLayoutX(xPosition);
+        shape.setLayoutY(yPosition);
+
+        if (isBottom()) {
+            if (y.isSpeedLow()) {
+                y.stopStopwatch();
+            } else {
+                y.updateStopwatch();
             }
-            setY0(bottom - EPS);
-            setVy0(-getVy() * 0.8);
-            yTime.start();
+            y.setStartValue(bottom - EPS);
+            y.setStartSpeed(-y.getSpeed() * 0.8);
         }
 
-        if (isOnTop()) {
-            setY0(top + EPS);
-            setVy0(-getVy() * 0.8);
-            yTime.start();
+        if (isTop()) {
+            y.setStartValue(top + EPS);
+            y.setStartSpeed(-y.getSpeed() * 0.8);
+            y.updateStopwatch();
         }
 
         if (isLeft()) {
-            setX0(left + EPS);
-            setVx0(-getVx() * 0.8);
-            xTime.start();
+            x.setStartValue(left + EPS);
+            x.setStartSpeed(-x.getSpeed() * 0.8);
+            x.updateStopwatch();
         }
 
         if (isRight()) {
-            setX0(right - EPS);
-            setVx0(-getVx() * 0.8);
-            xTime.start();
+            x.setStartValue(right - EPS);
+            x.setStartSpeed(-x.getSpeed() * 0.8);
+            x.updateStopwatch();
         }
     }
 
-    private boolean isOnBottom() {
-        return getY() >= bottom;
+    private boolean isBottom() {
+        return y.getCoordinate() >= bottom;
     }
 
-    private boolean isOnTop() {
-        return getY() <= top;
+    private boolean isTop() {
+        return y.getCoordinate() <= top;
     }
 
     private boolean isLeft() {
-        return getX() <= left;
+        return x.getCoordinate() <= left;
     }
 
     private boolean isRight() {
-        return getX() >= right;
+        return x.getCoordinate() >= right;
     }
 
-    private boolean isSpeedLow(double speed) {
-        return Math.abs(speed) <= 1;
-    }
-
-    private double countCoordinate(double coord0, double speed0, double acceleration, double time) {
-        return (coord0 + speed0 * time + acceleration / 2 * time * time) * 100;
-    }
-
-    private double getX() {
-        return circle.getLayoutX() / 100;
-    }
-
-    private double getY() {
-        return circle.getLayoutY() / 100;
-    }
-
-    private double getVy() {
-        return Vy0 + G * currentYTime;
-    }
-
-    private double getVx() {
-        return Vx0 + a * currentXTime;
-    }
-
-    private void setY0(double y0) {
-        this.y0 = y0;
-    }
-
-    private void setVy0(double Vy0) {
-        this.Vy0 = Vy0;
-    }
-
-    private void setX0(double x0) {
-        this.x0 = x0;
-    }
-
-    private void setVx0(double Vx0) {
-        this.Vx0 = Vx0;
-    }
 }
