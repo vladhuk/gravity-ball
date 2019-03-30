@@ -13,6 +13,8 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
     private double right;
     private double left;
 
+    private double scale = 0.01;
+
     private Shape shape;
 
     private Coordinate x;
@@ -26,10 +28,10 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
     }
 
     private void initCoordinates() {
-        x = new Coordinate(shape.getLayoutX() / 100, 4, 0);
+        x = new Coordinate(shape.getLayoutX() * scale, 4, 5);
         x.updateStopwatch();
 
-        y = new Coordinate(shape.getLayoutY() / 100, -5, G);
+        y = new Coordinate(shape.getLayoutY() * scale, -5, G);
         y.updateStopwatch();
     }
 
@@ -37,10 +39,10 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
         Bounds paneBounds = shape.getParent().getBoundsInLocal();
         Bounds shapeBounds = shape.getBoundsInLocal();
 
-        top = shapeBounds.getMaxY() / 100;
-        bottom = (paneBounds.getMaxY() - shapeBounds.getMaxY()) / 100;
-        right = (paneBounds.getMaxX() - shapeBounds.getMaxX()) / 100;
-        left = shapeBounds.getMaxX() / 100;
+        top = shapeBounds.getMaxY() * scale;
+        bottom = (paneBounds.getMaxY() - shapeBounds.getMaxY()) * scale;
+        right = (paneBounds.getMaxX() - shapeBounds.getMaxX()) * scale;
+        left = shapeBounds.getMaxX() * scale;
     }
 
     @Override
@@ -48,38 +50,34 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
         x.checkStopwatch();
         y.checkStopwatch();
 
-        double xPosition = x.getCoordinate() * 100;
-        double yPosition = y.getCoordinate() * 100;
+        double xPosition = x.getCoordinate() / scale;
+        double yPosition = y.getCoordinate() / scale;
 
         shape.setLayoutX(xPosition);
         shape.setLayoutY(yPosition);
 
         if (isBottom()) {
-            if (y.isSpeedLow()) {
-                y.stopStopwatch();
-            } else {
-                y.updateStopwatch();
-            }
+            updateStopwatch(y);
             y.setStartValue(bottom - EPS);
             y.setStartSpeed(-y.getSpeed() * 0.8);
         }
 
         if (isTop()) {
+            updateStopwatch(y);
             y.setStartValue(top + EPS);
             y.setStartSpeed(-y.getSpeed() * 0.8);
-            y.updateStopwatch();
         }
 
         if (isLeft()) {
+            updateStopwatch(x);
             x.setStartValue(left + EPS);
             x.setStartSpeed(-x.getSpeed() * 0.8);
-            x.updateStopwatch();
         }
 
         if (isRight()) {
+            updateStopwatch(x);
             x.setStartValue(right - EPS);
             x.setStartSpeed(-x.getSpeed() * 0.8);
-            x.updateStopwatch();
         }
     }
 
@@ -99,4 +97,11 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
         return x.getCoordinate() >= right;
     }
 
+    private void updateStopwatch(Coordinate c) {
+        if (c.isSpeedLow()) {
+            c.stopStopwatch();
+        } else {
+            c.updateStopwatch();
+        }
+    }
 }

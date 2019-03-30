@@ -1,8 +1,5 @@
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -13,7 +10,7 @@ import javafx.util.Duration;
 
 public class Main extends Application {
 
-    private static Circle circle;
+    private static Shape shape;
     private static Pane canvas;
 
     public static void main(String[] args) {
@@ -29,17 +26,17 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        circle = new Circle(15, Color.RED);
-        circle.relocate(200, 200);
+        shape = new Circle(15, Color.RED);
+        shape.relocate(200, 200);
 
-        canvas.getChildren().addAll(circle);
+        canvas.getChildren().addAll(shape);
 
         Timeline timeline = new Timeline();
         timeline.setAutoReverse(true);
         timeline.setCycleCount(Timeline.INDEFINITE);
 
 
-        KeyFrame kf = new KeyFrame(Duration.millis(1), new CanvasHandler(canvas, circle));
+        KeyFrame kf = new KeyFrame(Duration.millis(1), new CanvasHandler(shape));
 
         timeline.getKeyFrames().add(kf);
         timeline.play();

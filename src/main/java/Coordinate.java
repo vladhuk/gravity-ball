@@ -50,6 +50,6 @@ public class Coordinate {
     }
 
     public boolean isSpeedLow() {
-        return Math.abs(getSpeed()) <= 1;
+        return Math.abs(getSpeed()) <= 0.7;
     }
 }
