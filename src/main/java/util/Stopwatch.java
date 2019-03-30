@@ -1,3 +1,5 @@
+package util;
+
 public class Stopwatch {
 
     private double startTime;

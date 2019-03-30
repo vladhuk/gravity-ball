@@ -1,3 +1,5 @@
+package util;
+
 public class Coordinate {
 
     private Stopwatch stopwatch = new Stopwatch();

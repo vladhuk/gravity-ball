@@ -1,4 +1,5 @@
 Main.class
-Coordinate.class
-Stopwatch.class
-CanvasHandler.class
+controller\WindowController.class
+util\Coordinate.class
+util\CanvasHandler.class
+util\Stopwatch.class
