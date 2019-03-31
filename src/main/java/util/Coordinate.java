@@ -43,6 +43,18 @@ public class Coordinate {
         stopwatch.stop();
     }
 
+    public void updateOrStopStopwatch() {
+        if (isSpeedLow()) {
+            stopStopwatch();
+        } else {
+            updateStopwatch();
+        }
+    }
+
+    public boolean isSpeedLow() {
+        return Math.abs(getSpeed()) <= 0.7;
+    }
+
     public double getCoordinate() {
         return startValue + startSpeed * currentTime + acceleration / 2 * currentTime * currentTime;
     }
@@ -51,7 +63,4 @@ public class Coordinate {
         return startSpeed + acceleration * currentTime;
     }
 
-    public boolean isSpeedLow() {
-        return Math.abs(getSpeed()) <= 0.7;
-    }
 }

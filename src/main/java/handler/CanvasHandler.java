@@ -1,9 +1,10 @@
-package util;
+package handler;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.shape.Shape;
+import util.Coordinate;
 
 public class CanvasHandler implements EventHandler<ActionEvent> {
 
@@ -30,10 +31,10 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
     }
 
     private void initCoordinates() {
-        x = new Coordinate(shape.getLayoutX() * scale, 4, 5);
+        x = new Coordinate(shape.getLayoutX() * scale, 5, 1);
         x.updateStopwatch();
 
-        y = new Coordinate(shape.getLayoutY() * scale, -5, G);
+        y = new Coordinate(shape.getLayoutY() * scale, -10, G);
         y.updateStopwatch();
     }
 
@@ -58,26 +59,27 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
         shape.setLayoutX(xPosition);
         shape.setLayoutY(yPosition);
 
+        checkBorders();
+    }
+
+    private void checkBorders() {
         if (isBottom()) {
-            updateStopwatch(y);
+            y.updateOrStopStopwatch();
             y.setStartValue(bottom - EPS);
             y.setStartSpeed(-y.getSpeed() * 0.8);
-        }
-
-        if (isTop()) {
-            updateStopwatch(y);
+        } else if (isTop()) {
+            y.updateOrStopStopwatch();
             y.setStartValue(top + EPS);
             y.setStartSpeed(-y.getSpeed() * 0.8);
         }
 
         if (isLeft()) {
-            updateStopwatch(x);
+            x.updateOrStopStopwatch();
             x.setStartValue(left + EPS);
             x.setStartSpeed(-x.getSpeed() * 0.8);
-        }
-
-        if (isRight()) {
-            updateStopwatch(x);
+        } else if (isRight()) {
+            x.updateOrStopStopwatch();
+            x.updateStopwatch();
             x.setStartValue(right - EPS);
             x.setStartSpeed(-x.getSpeed() * 0.8);
         }
@@ -99,11 +101,4 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
         return x.getCoordinate() >= right;
     }
 
-    private void updateStopwatch(Coordinate c) {
-        if (c.isSpeedLow()) {
-            c.stopStopwatch();
-        } else {
-            c.updateStopwatch();
-        }
-    }
 }
