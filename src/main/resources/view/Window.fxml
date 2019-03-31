@@ -10,48 +10,36 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.WindowController">
    <children>
       <Pane fx:id="pane" layoutY="65.0" prefHeight="335.0" prefWidth="600.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0" />
-      <Label layoutX="8.0" layoutY="6.0" text="Shape spring">
+      <Label layoutX="27.0" layoutY="6.0" text="Spring">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="95.0" layoutY="4.0" prefHeight="18.0" prefWidth="88.0" text="Bordery spring">
+      <TextField fx:id="springField" focusTraversable="false" layoutX="14.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
+      <Label layoutX="130.0" layoutY="5.0" prefHeight="18.0" prefWidth="22.0" text="V0x">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="shapeSpringField" focusTraversable="false" layoutX="14.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <Label layoutX="310.0" layoutY="5.0" prefHeight="18.0" prefWidth="22.0" text="V0x">
+      <Label layoutX="227.0" layoutY="5.0" prefHeight="18.0" prefWidth="22.0" text="V0y">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="395.0" layoutY="5.0" prefHeight="18.0" prefWidth="22.0" text="V0y">
+      <Label layoutX="328.0" layoutY="5.0" prefHeight="18.0" prefWidth="8.0" text="a">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="490.0" layoutY="5.0" prefHeight="18.0" prefWidth="8.0" text="a">
-         <font>
-            <Font name="Arial Bold" size="12.0" />
-         </font>
-      </Label>
-      <TextField fx:id="borderSpringField" focusTraversable="false" layoutX="107.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <TextField fx:id="FrictionField" focusTraversable="false" layoutX="199.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <TextField fx:id="startSpeedXField" focusTraversable="false" layoutX="289.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <TextField fx:id="startSpeedYField" focusTraversable="false" layoutX="375.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <TextField fx:id="accelerationField" focusTraversable="false" layoutX="462.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <Label layoutX="209.0" layoutY="5.0" prefHeight="18.0" prefWidth="44.0" text="Friction">
-         <font>
-            <Font name="Arial Bold" size="12.0" />
-         </font>
-      </Label>
-      <Button fx:id="startButton" focusTraversable="false" layoutX="544.0" layoutY="10.0" mnemonicParsing="false" onAction="#start" text="Start">
+      <TextField fx:id="startSpeedXField" focusTraversable="false" layoutX="109.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
+      <TextField fx:id="startSpeedYField" focusTraversable="false" layoutX="206.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
+      <TextField fx:id="accelerationField" focusTraversable="false" layoutX="300.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
+      <Button focusTraversable="false" layoutX="544.0" layoutY="11.0" mnemonicParsing="false" onAction="#start" text="Start">
          <font>
             <Font name="Arial" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="stopButton" focusTraversable="false" layoutX="544.0" layoutY="33.0" mnemonicParsing="false" onAction="#stop" text="Stop">
+      <Button focusTraversable="false" layoutX="544.0" layoutY="37.0" mnemonicParsing="false" onAction="#stop" text="Stop">
          <font>
             <Font name="Arial" size="12.0" />
          </font>

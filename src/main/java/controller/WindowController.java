@@ -24,13 +24,7 @@ public class WindowController implements Initializable {
     private Pane pane;
 
     @FXML
-    private TextField shapeSpringField;
-
-    @FXML
-    private TextField borderSpringField;
-
-    @FXML
-    private TextField FrictionField;
+    private TextField springField;
 
     @FXML
     private TextField startSpeedXField;
@@ -40,12 +34,6 @@ public class WindowController implements Initializable {
 
     @FXML
     private TextField accelerationField;
-
-    @FXML
-    private Button startButton;
-
-    @FXML
-    private Button stopButton;
 
     private Shape shape;
     private Timeline timeline;
@@ -66,9 +54,30 @@ public class WindowController implements Initializable {
         stop();
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        KeyFrame kf = new KeyFrame(Duration.millis(1), new CanvasHandler(shape));
+
+        KeyFrame kf = buildKeyFrame();
+
         timeline.getKeyFrames().add(kf);
         timeline.play();
+    }
+
+    private KeyFrame buildKeyFrame() {
+        double spring = getDoubleFromField(springField);
+        double V0x = getDoubleFromField(startSpeedXField);
+        double V0y = getDoubleFromField(startSpeedYField);
+        double acceleration = getDoubleFromField(accelerationField);
+
+        CanvasHandler handler = new CanvasHandler(shape, spring, V0x, V0y, acceleration);
+
+        return new KeyFrame(Duration.millis(1), handler);
+    }
+
+    private double getDoubleFromField(TextField field) {
+        try {
+            return Double.parseDouble(field.getText());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     @FXML

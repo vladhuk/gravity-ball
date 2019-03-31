@@ -17,24 +17,26 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
     private double left;
 
     private double scale = 0.01;
+    private double spring;
 
     private Shape shape;
 
     private Coordinate x;
     private Coordinate y;
 
-    public CanvasHandler(Shape shape) {
+    public CanvasHandler(Shape shape, double spring, double V0x, double V0y, double acceleration) {
         this.shape = shape;
+        this.spring = spring;
 
-        initCoordinates();
+        initCoordinates(V0x, V0y, acceleration);
         initBorders();
     }
 
-    private void initCoordinates() {
-        x = new Coordinate(shape.getLayoutX() * scale, 5, 1);
+    private void initCoordinates(double V0x, double V0y, double acceleration) {
+        x = new Coordinate(shape.getLayoutX() * scale, V0x, acceleration);
         x.updateStopwatch();
 
-        y = new Coordinate(shape.getLayoutY() * scale, -10, G);
+        y = new Coordinate(shape.getLayoutY() * scale, V0y, G);
         y.updateStopwatch();
     }
 
@@ -56,32 +58,31 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
         double xPosition = x.getCoordinate() / scale;
         double yPosition = y.getCoordinate() / scale;
 
+        checkBorders();
+
         shape.setLayoutX(xPosition);
         shape.setLayoutY(yPosition);
-
-        checkBorders();
     }
 
     private void checkBorders() {
         if (isBottom()) {
             y.updateOrStopStopwatch();
             y.setStartValue(bottom - EPS);
-            y.setStartSpeed(-y.getSpeed() * 0.8);
+            y.setStartSpeed(-y.getSpeed() * spring);
         } else if (isTop()) {
             y.updateOrStopStopwatch();
             y.setStartValue(top + EPS);
-            y.setStartSpeed(-y.getSpeed() * 0.8);
+            y.setStartSpeed(-y.getSpeed() * spring);
         }
 
         if (isLeft()) {
             x.updateOrStopStopwatch();
             x.setStartValue(left + EPS);
-            x.setStartSpeed(-x.getSpeed() * 0.8);
+            x.setStartSpeed(-x.getSpeed() * spring);
         } else if (isRight()) {
             x.updateOrStopStopwatch();
-            x.updateStopwatch();
             x.setStartValue(right - EPS);
-            x.setStartSpeed(-x.getSpeed() * 0.8);
+            x.setStartSpeed(-x.getSpeed() * spring);
         }
     }
 
