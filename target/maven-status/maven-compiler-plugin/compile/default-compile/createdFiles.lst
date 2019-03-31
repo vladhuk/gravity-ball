@@ -1,9 +1,0 @@
-Main.class
-controller\WindowController.class
-handler\MouseHandler.class
-util\Coordinate.class
-handler\MouseHandler$1.class
-handler\MouseHandler$OnMousePressedEvent.class
-util\Stopwatch.class
-handler\MouseHandler$OnMouseDraggedEvent.class
-handler\CanvasHandler.class
