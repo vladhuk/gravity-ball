@@ -5,6 +5,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.shape.Shape;
 import util.Coordinate;
+import util.Stopwatch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CanvasHandler implements EventHandler<ActionEvent> {
 
@@ -24,12 +28,19 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
     private Coordinate x;
     private Coordinate y;
 
+    private List<Double> xPoints = new ArrayList<>();
+    private List<Double> yPoints = new ArrayList<>();
+    private Stopwatch stopwatch = new Stopwatch();
+    private double lastCurrentTime = 0;
+
     public CanvasHandler(Shape shape, double spring, double V0x, double V0y, double acceleration) {
         this.shape = shape;
         this.spring = spring;
 
         initCoordinates(V0x, V0y, acceleration);
         initBorders();
+
+        stopwatch.start();
     }
 
     private void initCoordinates(double V0x, double V0y, double acceleration) {
@@ -52,6 +63,7 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
+        double currentTime = stopwatch.getCurrentTimeSeconds();
         x.checkStopwatch();
         y.checkStopwatch();
 
@@ -62,6 +74,12 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
 
         shape.setLayoutX(xPosition);
         shape.setLayoutY(yPosition);
+
+        if (currentTime - lastCurrentTime > 0.2) {
+            lastCurrentTime = currentTime;
+            xPoints.add(xPosition);
+            yPoints.add(yPosition);
+        }
     }
 
     private void checkBorders() {
@@ -100,6 +118,14 @@ public class CanvasHandler implements EventHandler<ActionEvent> {
 
     private boolean isRight() {
         return x.getCoordinate() >= right;
+    }
+
+    public List<Double> getXPoints() {
+        return xPoints;
+    }
+
+    public List<Double> getYPoints() {
+        return yPoints;
     }
 
 }
