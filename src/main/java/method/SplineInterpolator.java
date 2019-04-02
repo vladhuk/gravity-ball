@@ -2,7 +2,7 @@ package method;
 
 import java.util.List;
 
-public class SplineInterpolator {
+public class SplineInterpolator implements Interpolatable {
 
     private final List<Double> mX;
     private final List<Double> mY;
@@ -60,6 +60,7 @@ public class SplineInterpolator {
         return new SplineInterpolator(x, y, m);
     }
 
+    @Override
     public double interpolate(double x) {
         // Handle the boundary cases.
         final int n = mX.size();

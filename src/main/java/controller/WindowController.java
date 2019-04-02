@@ -12,10 +12,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 import handler.CanvasHandler;
+import method.Interpolatable;
 import method.SplineInterpolator;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class WindowController implements Initializable {
 
@@ -51,6 +52,7 @@ public class WindowController implements Initializable {
 
     private Shape mainShape;
     private Shape interpolateShape;
+    private List<Shape> shapePoints;
     private Timeline timeline;
     private PathTransition pathTransition;
     private CanvasHandler canvasHandler;
@@ -119,43 +121,98 @@ public class WindowController implements Initializable {
     @FXML
     void stop() {
         timeline.stop();
-        
+
         interpolateButton.setDisable(false);
     }
 
     @FXML
     void interpolate() {
         cleanButton.setDisable(false);
+        interpolateButton.setDisable(true);
         startButton.setDisable(true);
         stopButton.setDisable(true);
 
         pane.getChildren().add(interpolateShape);
 
+        Map<Double, Double> sortedPoints = getSortedPoints();
+        List<Double> xPoints = new ArrayList<>(sortedPoints.keySet());
+        List<Double> yPoints = new ArrayList<>(sortedPoints.values());
+
+        drawPoints(xPoints, yPoints);
+
+        Interpolatable method = null;
         switch (methodComboBox.getValue()) {
             case SPLINE:
-                splineInterpolation();
+                method = SplineInterpolator.createMonotoneCubicSpline(xPoints, yPoints);
                 break;
         }
+        interpolate(method);
     }
 
-    private void splineInterpolation() {
-        SplineInterpolator spline = SplineInterpolator.createMonotoneCubicSpline(canvasHandler.getXPoints(),
-                                                                                 canvasHandler.getYPoints());
+    private void drawPoints(List<Double> xPoints, List<Double> yPoints) {
+        shapePoints = new LinkedList<>();
+
+        for (int i = 0; i < xPoints.size(); i++) {
+            Circle circle = new Circle(3, Color.BLACK);
+            circle.relocate(xPoints.get(i), yPoints.get(i));
+            shapePoints.add(circle);
+        }
+        pane.getChildren().addAll(shapePoints);
+    }
+
+    private Map<Double, Double> getSortedPoints() {
+        List<Double> xPoints = canvasHandler.getXPoints();
+        List<Double> yPoints = canvasHandler.getYPoints();
+
+        if (xPoints.get(1) > xPoints.get(0)) {
+            for (int i = 1; i < xPoints.size(); i++) {
+                if (xPoints.get(i) < xPoints.get(i - 1)) {
+                    xPoints = xPoints.subList(0, i);
+                    yPoints = yPoints.subList(0, i);
+                    break;
+                }
+            }
+        } else {
+            for (int i = 1; i < xPoints.size(); i++) {
+                if (xPoints.get(i) > xPoints.get(i - 1)) {
+                    xPoints = xPoints.subList(0, i);
+                    yPoints = yPoints.subList(0, i);
+                    break;
+                }
+            }
+        }
+
+        Map<Double, Double> sortedPoints = new TreeMap<>();
+        for (int i = 0; i < xPoints.size(); i++) {
+            sortedPoints.put(xPoints.get(i), yPoints.get(i));
+        }
+
+        return sortedPoints;
+    }
+
+    private void interpolate(Interpolatable method) {
         Path path = new Path();
 
         path.getElements().add(new MoveTo(0, 0));
-        for (int i = 1; i < canvasHandler.getXPoints().size(); i++) {
-            double xPoint = canvasHandler.getXPoints().get(i);
-            double xPointPrev = canvasHandler.getXPoints().get(i - 1);
 
-            for (int j = 0; j < 100; j++) {
-                path.getElements().add(new LineTo(xPointPrev + j * 0.01 * (xPoint - xPointPrev),
-                                                  spline.interpolate(xPointPrev + j * 0.01 * (xPoint - xPointPrev))));
+        final double interval = 0.01;
+        List<Double> xPoints = canvasHandler.getXPoints();
+
+        for (int i = 1; i < xPoints.size(); i++) {
+
+            double x = xPoints.get(i);
+            double xPrev = xPoints.get(i - 1);
+
+            for (int j = 0; j < 1 / interval; j++) {
+                double newX = xPrev + j * interval * (x - xPrev);
+                double newY = method.interpolate(newX);
+
+                path.getElements().add(new LineTo(newX, newY));
             }
         }
 
         pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(canvasHandler.getXPoints().size() / 0.005));
+        pathTransition.setDuration(Duration.millis(xPoints.size() / 0.005));
         pathTransition.setNode(interpolateShape);
         pathTransition.setPath(path);
         pathTransition.play();
@@ -164,10 +221,12 @@ public class WindowController implements Initializable {
     @FXML
     void clean() {
         startButton.setDisable(false);
+        interpolateButton.setDisable(false);
 
         pathTransition.stop();
 
         pane.getChildren().remove(interpolateShape);
+        pane.getChildren().removeAll(shapePoints);
     }
 
 }
