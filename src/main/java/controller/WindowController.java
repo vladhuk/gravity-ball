@@ -64,19 +64,29 @@ public class WindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        interpolateShape = new Circle(15, Color.BLUE);
-        mainShape = new Circle(15, Color.RED);
-        mainShape.relocate(300, 150);
-        pane.getChildren().add(mainShape);
-
-        methodComboBox.setValue(Method.SPLINE);
-        ObservableList<Method> methods = FXCollections.observableArrayList(Method.values());
-        methodComboBox.setItems(methods);
+        initShapes();
+        configureMethodComboBox();
+        addMouseHandlers();
 
         stopButton.setDisable(true);
         interpolateButton.setDisable(true);
         cleanButton.setDisable(true);
+    }
 
+    private void initShapes() {
+        interpolateShape = new Circle(15, Color.BLUE);
+        mainShape = new Circle(15, Color.RED);
+        mainShape.relocate(300, 150);
+        pane.getChildren().add(mainShape);
+    }
+
+    private void configureMethodComboBox() {
+        methodComboBox.setValue(Method.SPLINE);
+        ObservableList<Method> methods = FXCollections.observableArrayList(Method.values());
+        methodComboBox.setItems(methods);
+    }
+
+    private void addMouseHandlers() {
         MouseHandler handler = new MouseHandler(mainShape);
         mainShape.setOnMousePressed(handler.getOnMousePressedEvent());
         mainShape.setOnMouseDragged(handler.getOnMouseDraggedEvent());
@@ -153,18 +163,8 @@ public class WindowController implements Initializable {
             case LAGRANGE:
                 method = LagrangeInterpolator.createLagrangePolinom(xPoints, yPoints);
         }
+
         interpolate(method);
-    }
-
-    private void drawPoints(List<Double> xPoints, List<Double> yPoints) {
-        shapePoints = new LinkedList<>();
-
-        for (int i = 0; i < xPoints.size(); i++) {
-            Circle circle = new Circle(3, Color.BLACK);
-            circle.relocate(xPoints.get(i), yPoints.get(i));
-            shapePoints.add(circle);
-        }
-        pane.getChildren().addAll(shapePoints);
     }
 
     private Map<Double, Double> getSortedPoints() {
@@ -197,6 +197,17 @@ public class WindowController implements Initializable {
         return sortedPoints;
     }
 
+    private void drawPoints(List<Double> xPoints, List<Double> yPoints) {
+        shapePoints = new LinkedList<>();
+
+        for (int i = 0; i < xPoints.size(); i++) {
+            Circle circle = new Circle(3, Color.BLACK);
+            circle.relocate(xPoints.get(i), yPoints.get(i));
+            shapePoints.add(circle);
+        }
+        pane.getChildren().addAll(shapePoints);
+    }
+
     private void interpolate(Interpolatable method) {
         Path path = new Path();
 
@@ -213,6 +224,8 @@ public class WindowController implements Initializable {
             for (int j = 0; j < 1 / interval; j++) {
                 double newX = xPrev + j * interval * (x - xPrev);
                 double newY = method.interpolate(newX);
+                newX -= interpolateShape.getLayoutX();
+                newY -= interpolateShape.getLayoutY();
 
                 path.getElements().add(new LineTo(newX, newY));
             }
