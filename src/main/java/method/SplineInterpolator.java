@@ -9,41 +9,41 @@ public class SplineInterpolator implements Interpolatable {
     private final double[] mM;
 
     private SplineInterpolator(List<Double> x, List<Double> y, double[] m) {
+
         mX = x;
         mY = y;
         mM = m;
+
     }
 
     public static SplineInterpolator createMonotoneCubicSpline(List<Double> x, List<Double> y) {
         if (x == null || y == null || x.size() != y.size() || x.size() < 2) {
-            throw new IllegalArgumentException("There must be at least two control "
-                                                       + "points and the arrays must be of equal length.");
+            throw new IllegalArgumentException("Повинно бути щонайменше дві контрольні точки і ці точки повинні мати як x так і y ");
         }
 
         final int n = x.size();
         double[] d = new double[n - 1];
         double[] m = new double[n];
 
-        // Compute slopes of secant lines between successive points.
+
         for (int i = 0; i < n - 1; i++) {
             double h = x.get(i + 1) - x.get(i);
             if (h <= 0f) {
-                throw new IllegalArgumentException("The control points must all "
-                                                           + "have strictly increasing X values.");
+                throw new IllegalArgumentException("Контрольні точки мають мати строго зростаючу Х-координату");
             }
             d[i] = (y.get(i + 1) - y.get(i)) / h;
         }
 
-        // Initialize the tangents as the average of the secants.
+
         m[0] = d[0];
         for (int i = 1; i < n - 1; i++) {
             m[i] = (d[i - 1] + d[i]) * 0.5f;
         }
         m[n - 1] = d[n - 2];
 
-        // Update the tangents to preserve monotonicity.
+        // Оновлення дотичних для збереження монотонності.
         for (int i = 0; i < n - 1; i++) {
-            if (d[i] == 0f) { // successive Y values are equal
+            if (d[i] == 0f) { // послідовні значення Y рівні
                 m[i] = 0f;
                 m[i + 1] = 0f;
             } else {
@@ -62,7 +62,7 @@ public class SplineInterpolator implements Interpolatable {
 
     @Override
     public double interpolate(double x) {
-        // Handle the boundary cases.
+        // Обробка граничних випадкыв
         final int n = mX.size();
         if (Double.isNaN(x)) {
             return x;
@@ -74,8 +74,8 @@ public class SplineInterpolator implements Interpolatable {
             return mY.get(n - 1);
         }
 
-        // Find the index 'i' of the last point with smaller X.
-        // We know this will be within the spline due to the boundary tests.
+        // Знайдіть індекса "i" останньої точки з меншим X.
+        // Ми знаємо, що це відбуватиметься в межах сплайна за рахунок граничних випробувань.
         int i = 0;
         while (x >= mX.get(i + 1)) {
             i += 1;
@@ -84,7 +84,7 @@ public class SplineInterpolator implements Interpolatable {
             }
         }
 
-        // Perform cubic Hermite spline interpolation.
+        // Виконується кубічна сплайн-інтерполяція.
         double h = mX.get(i + 1) - mX.get(i);
         double t = (x - mX.get(i)) / h;
         return (mY.get(i) * (1 + 2 * t) + h * mM[i] * t) * (1 - t) * (1 - t)

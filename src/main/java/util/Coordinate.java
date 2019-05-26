@@ -1,6 +1,6 @@
 package util;
 
-public class Coordinate {
+public class  Coordinate {
 
     private Stopwatch stopwatch = new Stopwatch();
     private double currentTime;
