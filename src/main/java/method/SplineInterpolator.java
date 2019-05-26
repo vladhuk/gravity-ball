@@ -10,6 +10,7 @@ public class SplineInterpolator implements Interpolatable {
 
     private SplineInterpolator(List<Double> x, List<Double> y, double[] m) {
 
+
         mX = x;
         mY = y;
         mM = m;

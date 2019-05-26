@@ -15,6 +15,7 @@ import javafx.scene.shape.*;
 import javafx.util.Duration;
 import handler.CanvasHandler;
 import method.Interpolatable;
+import method.LagrangeInterpolator;
 import method.SplineInterpolator;
 
 import java.net.URL;
@@ -59,7 +60,7 @@ public class WindowController implements Initializable {
     private PathTransition pathTransition;
     private CanvasHandler canvasHandler;
 
-    private enum Method { SPLINE }
+    private enum Method { SPLINE, LAGRANGE }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -149,6 +150,8 @@ public class WindowController implements Initializable {
             case SPLINE:
                 method = SplineInterpolator.createMonotoneCubicSpline(xPoints, yPoints);
                 break;
+            case LAGRANGE:
+                method = LagrangeInterpolator.createLagrangePolinom(xPoints, yPoints);
         }
         interpolate(method);
     }
