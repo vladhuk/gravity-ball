@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<LineChart fx:id="lineChart" createSymbols="false" title="Method comparison chart" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChartController">
+  <xAxis>
+    <NumberAxis label="x" side="BOTTOM" />
+  </xAxis>
+  <yAxis>
+    <NumberAxis label="y" side="LEFT" />
+  </yAxis>
+</LineChart>

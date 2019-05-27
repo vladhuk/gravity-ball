@@ -11,31 +11,31 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.WindowController">
    <children>
       <Pane fx:id="pane" layoutY="65.0" prefHeight="335.0" prefWidth="600.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0" />
-      <Label layoutX="27.0" layoutY="6.0" text="Spring">
+      <Label layoutX="81.0" layoutY="6.0" text="Spring">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="springField" focusTraversable="false" layoutX="14.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <Label layoutX="119.0" layoutY="2.0" prefHeight="18.0" prefWidth="22.0" text="V0x">
+      <TextField fx:id="springField" focusTraversable="false" layoutX="70.0" layoutY="23.0" prefHeight="26.0" prefWidth="60.0" />
+      <Label layoutX="158.0" layoutY="5.0" prefHeight="18.0" prefWidth="22.0" text="V0x">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="206.0" layoutY="2.0" prefHeight="18.0" prefWidth="22.0" text="V0y">
+      <Label layoutX="229.0" layoutY="5.0" prefHeight="18.0" prefWidth="22.0" text="V0y">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="296.0" layoutY="5.0" prefHeight="18.0" prefWidth="8.0" text="a">
+      <Label layoutX="306.0" layoutY="5.0" prefHeight="18.0" prefWidth="8.0" text="a">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="startSpeedXField" focusTraversable="false" layoutX="98.0" layoutY="23.0" prefHeight="26.0" prefWidth="64.0" />
-      <TextField fx:id="startSpeedYField" focusTraversable="false" layoutX="185.0" layoutY="24.0" prefHeight="26.0" prefWidth="64.0" />
-      <TextField fx:id="accelerationField" focusTraversable="false" layoutX="272.0" layoutY="24.0" prefHeight="26.0" prefWidth="64.0" />
-      <Button fx:id="startButton" defaultButton="true" focusTraversable="false" layoutX="353.0" layoutY="11.0" mnemonicParsing="false" onAction="#start" text="Start">
+      <TextField fx:id="startSpeedXField" focusTraversable="false" layoutX="140.0" layoutY="24.0" prefHeight="26.0" prefWidth="60.0" />
+      <TextField fx:id="startSpeedYField" focusTraversable="false" layoutX="210.0" layoutY="24.0" prefHeight="26.0" prefWidth="60.0" />
+      <TextField fx:id="accelerationField" focusTraversable="false" layoutX="280.0" layoutY="24.0" prefHeight="26.0" prefWidth="60.0" />
+      <Button fx:id="startButton" defaultButton="true" focusTraversable="false" layoutX="353.0" layoutY="10.0" mnemonicParsing="false" onAction="#start" text="Start">
          <font>
             <Font name="Arial" size="12.0" />
          </font>
@@ -52,9 +52,17 @@
                   <Font name="Arial" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="cleanButton" focusTraversable="false" layoutX="96.0" layoutY="32.0" mnemonicParsing="false" onAction="#clean" prefHeight="26.0" prefWidth="82.0" text="Clean" />
+            <Button fx:id="cleanButton" focusTraversable="false" layoutX="96.0" layoutY="32.0" mnemonicParsing="false" onAction="#clean" prefHeight="26.0" prefWidth="82.0" text="Clean">
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font></Button>
             <ComboBox fx:id="methodComboBox" focusTraversable="false" layoutX="14.0" layoutY="2.0" prefHeight="26.0" prefWidth="163.0" />
          </children>
       </AnchorPane>
+      <Button fx:id="showChartButton" contentDisplay="CENTER" focusTraversable="false" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#showChart" prefHeight="45.0" prefWidth="50.0" text="Show chart" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

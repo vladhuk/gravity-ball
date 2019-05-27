@@ -5,19 +5,24 @@ import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import handler.CanvasHandler;
 import method.Interpolatable;
 import method.LagrangeInterpolator;
 import method.SplineInterpolator;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -90,6 +95,19 @@ public class WindowController implements Initializable {
         MouseHandler handler = new MouseHandler(mainShape);
         mainShape.setOnMousePressed(handler.getOnMousePressedEvent());
         mainShape.setOnMouseDragged(handler.getOnMouseDraggedEvent());
+    }
+
+    @FXML
+    void showChart() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/Chart.fxml"));
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+
+        stage.setTitle("Chart");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
