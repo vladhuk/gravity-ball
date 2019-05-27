@@ -153,7 +153,7 @@ public class WindowController implements Initializable {
         List<Double> xPoints = new ArrayList<>(sortedPoints.keySet());
         List<Double> yPoints = new ArrayList<>(sortedPoints.values());
 
-        drawPoints(xPoints, yPoints);
+        drawPoints(xPoints, yPoints, 4, Color.BLACK);
 
         Interpolatable method = null;
         switch (methodComboBox.getValue()) {
@@ -197,11 +197,11 @@ public class WindowController implements Initializable {
         return sortedPoints;
     }
 
-    private void drawPoints(List<Double> xPoints, List<Double> yPoints) {
+    private void drawPoints(List<Double> xPoints, List<Double> yPoints, int size, Color color) {
         shapePoints = new LinkedList<>();
 
         for (int i = 0; i < xPoints.size(); i++) {
-            Circle circle = new Circle(3, Color.BLACK);
+            Circle circle = new Circle(size, color);
             circle.relocate(xPoints.get(i), yPoints.get(i));
             shapePoints.add(circle);
         }
@@ -216,6 +216,7 @@ public class WindowController implements Initializable {
         final double interval = 0.01;
         List<Double> xPoints = canvasHandler.getXPoints();
 
+        Map<Double, Double> interpolatedPoints = new LinkedHashMap<>();
         for (int i = 1; i < xPoints.size(); i++) {
 
             double x = xPoints.get(i);
@@ -224,12 +225,20 @@ public class WindowController implements Initializable {
             for (int j = 0; j < 1 / interval; j++) {
                 double newX = xPrev + j * interval * (x - xPrev);
                 double newY = method.interpolate(newX);
+
+                interpolatedPoints.put(newX, newY);
+
                 newX -= interpolateShape.getLayoutX();
                 newY -= interpolateShape.getLayoutY();
 
                 path.getElements().add(new LineTo(newX, newY));
             }
         }
+
+        drawPoints(new ArrayList<>(interpolatedPoints.keySet()),
+                   new ArrayList<>(interpolatedPoints.values()),
+                   2,
+                   Color.SKYBLUE);
 
         pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(xPoints.size() / 0.005));
@@ -245,8 +254,8 @@ public class WindowController implements Initializable {
 
         pathTransition.stop();
 
-        pane.getChildren().remove(interpolateShape);
-        pane.getChildren().removeAll(shapePoints);
+        pane.getChildren().clear();
+        pane.getChildren().add(mainShape);
     }
 
 }
